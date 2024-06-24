@@ -2,103 +2,95 @@ import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/widget/round_button_theme.dart';
 import 'package:fast_app_base/common/widget/w_round_button.dart';
 import 'package:fast_app_base/screen/dialog/d_message.dart';
+import 'package:fast_app_base/screen/main/tab/home/w_sign_app_bar.dart';
+import 'package:fast_app_base/screen/main/wsb/w_floating_sign_button.riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../common/widget/mixin/w_rounded_container.dart';
 import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
+import '../../s_main.dart';
 
-class HomeFragment extends StatelessWidget {
-  const HomeFragment({
-    Key? key,
-  }) : super(key: key);
+class HomeFragment extends ConsumerStatefulWidget {
+  const HomeFragment({super.key});
+
+  @override
+  ConsumerState<HomeFragment> createState() => _HomeFragmentState();
+}
+
+class _HomeFragmentState extends ConsumerState<HomeFragment> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    scrollController.addListener((){
+      final floatingState = ref.read(floatingButtonStateProvider);
+
+      //if(scrollController.position.pixels > 100 && !floatingState.isSmall)
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.appColors.seedColor.getMaterialColorValues[100],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+      color: Colors.white,
+      child: Stack(
         children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => openDrawer(context),
-                icon: const Icon(Icons.menu),
-              )
-            ],
+          SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.only(
+              top: SignAppBar.appBarHeight,
+              bottom: MainScreenState.bottomNavigationBarHeight, // s_main.dart에 변수를 선언했음
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  height10,
+                  RoundedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "2024년 6월 16일 / 4월 회의록 / ***** ".text.bold.white.make(),
+                      ],
+                    ),
+                  ),
+                  height10,
+                  RoundedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "2024년 6월 16일 / 4월 회의록 / ***** ".text.bold.white.make(),
+                      ],
+                    ),
+                  ),
+                  height10,
+                  RoundedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "2024년 6월 16일 / 4월 회의록 / ***** ".text.bold.white.make(),
+                      ],
+                    ),
+                  ),
+                  height10,
+                  RoundedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "2024년 6월 16일 / 4월 회의록 / ***** ".text.bold.white.make(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          const EmptyExpanded(),
-          RoundButton(
-            text: 'Snackbar 보이기',
-            onTap: () => showSnackbar(context),
-            theme: RoundButtonTheme.blue,
-          ),
-          const Height(20),
-          RoundButton(
-            text: 'Confirm 다이얼로그',
-            onTap: () => showConfirmDialog(context),
-            theme: RoundButtonTheme.whiteWithBlueBorder,
-          ),
-          const Height(20),
-          RoundButton(
-            text: 'Message 다이얼로그',
-            onTap: showMessageDialog,
-            theme: RoundButtonTheme.whiteWithBlueBorder,
-          ),
-          const Height(20),
-          RoundButton(
-            text: '메뉴 보기',
-            onTap: () => openDrawer(context),
-            theme: RoundButtonTheme.blink,
-          ),
-          const EmptyExpanded()
+          SignAppBar(),
         ],
       ),
     );
-  }
-
-  void showSnackbar(BuildContext context) {
-    context.showSnackbar('snackbar 입니다.',
-        extraButton: Tap(
-          onTap: () {
-            context.showErrorSnackbar('error');
-          },
-          child: '에러 보여주기 버튼'.text.white.size(13).make().centered().pSymmetric(h: 10, v: 5),
-        ));
-  }
-
-  Future<void> showConfirmDialog(BuildContext context) async {
-    final confirmDialogResult = await ConfirmDialog(
-      '오늘 기분이 좋나요?',
-      buttonText: "네",
-      cancelButtonText: "아니오",
-    ).show();
-    debugPrint(confirmDialogResult?.isSuccess.toString());
-
-    confirmDialogResult?.runIfSuccess((data) {
-      ColorBottomSheet(
-        '❤️',
-        context: context,
-        backgroundColor: Colors.yellow.shade200,
-      ).show();
-    });
-
-    confirmDialogResult?.runIfFailure((data) {
-      ColorBottomSheet(
-        '❤️힘내여',
-        backgroundColor: Colors.yellow.shade300,
-        textColor: Colors.redAccent,
-      ).show();
-    });
-  }
-
-  Future<void> showMessageDialog() async {
-    final result = await MessageDialog("안녕하세요").show();
-    debugPrint(result.toString());
-  }
-
-  void openDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
   }
 }

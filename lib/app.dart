@@ -1,9 +1,11 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/theme/custom_theme_app.dart';
+import 'package:fast_app_base/data/memory/vo/sign_data_record.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/material.dart';
 
 import 'common/theme/custom_theme.dart';
+import 'data/memory/vo/sign_data_holder.dart';
 
 class App extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -22,6 +24,8 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
+  final record = SignDataRecord();
+
   @override
   void initState() {
     super.initState();
@@ -38,14 +42,17 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return CustomThemeApp(
       child: Builder(builder: (context) {
-        return MaterialApp(
-          navigatorKey: App.navigatorKey,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: 'Image Finder',
-          theme: context.themeType.themeData,
-          home: const MainScreen(),
+        return SignDataHolder(
+          record: record,
+          child: MaterialApp(
+            navigatorKey: App.navigatorKey,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            title: 'Image Finder',
+            theme: context.themeType.themeData,
+            home: const MainScreen(),
+          ),
         );
       }),
     );
